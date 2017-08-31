@@ -2,7 +2,7 @@ BASE_IMAGE ?= ubuntu:16.04
 IMAGE_NAME ?= build-slurm
 RELEASE_IMAGE ?= nvcr.io/nvidian_sas/build-slurm
 
-SLURM_VERSION=17.02.5
+SLURM_VERSION=17.02.7
 
 ifdef DOCKER_APT_PROXY
   CACHES = --build-arg APT_PROXY_PORT=${DOCKER_APT_PROXY}
