@@ -1,4 +1,4 @@
-MAINTAINER Ryan Olson rolson@nvidia.com
+MAINTAINER Jack Han jahan@nvidia.com
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential ruby-dev libpam0g-dev libmysqlclient-dev \
@@ -7,17 +7,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN gem install fpm
 
-ARG SLURM_VERSION=17.02.5
+ARG SLURM_VERSION=17.02.7
 ARG APT_VERSION=1.0
 
 RUN wget http://www.schedmd.com/downloads/latest/slurm-$SLURM_VERSION.tar.bz2 \
  && tar xvjf slurm-$SLURM_VERSION.tar.bz2 \
  && rm -f slurm-$SLURM_VERSION.tar.bz2 \
  && cd slurm-$SLURM_VERSION \
- && ./configure --prefix=/tmp/slurm-build --sysconfdir=/etc/slurm \
+ && ./configure --sysconfdir=/etc/slurm \
  && make -j \
  && make -j contrib \
- && make -j install 
+ && make -j install DESTDIR=/tmp/slurm-build
 
-RUN fpm -s dir -t deb -v $APT_VERSION -n slurm-${SLURM_VERSION} --prefix=/usr -C /tmp/slurm-build . \
+RUN fpm -s dir -t deb -v $APT_VERSION -n slurm-${SLURM_VERSION} -C /tmp/slurm-build . \
  && dpkg --contents slurm-${SLURM_VERSION}_${APT_VERSION}_amd64.deb
